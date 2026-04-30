@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>dual-Infodose Chat Cinematográfico · KOBLLUX SymbolBar v2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <script defer src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <link rel="stylesheet" href="web/styles/index.css" />
+</head>
+<body>
+  <div id="koblluxPlayer"></div>
+  <select id="themeSelector" onchange="applyThemeSelector(this.value)">
+    <option value="dark">🌑 Dark</option><option value="light">🌞 Light</option><option value="medium">🌓 Medium</option><option value="vibe">🌈 Vibe</option><option value="cyberpunk">☣️ Cyberpunk</option><option value="anime">🌸 Anime</option>
+  </select>
+  <button aria-label="Alternar tema" id="themeToggle" title="Alternar tema"></button>
+  <div id="particles-js"></div>
+  <div class="svg-container" id="logoContainer"><object data="assets/icons/pill_fusion-kblx-1.png" id="logoObj" type="image/png"></object></div>
+  <div aria-live="polite" id="assistantName"></div>
+
+  <div class="response-container" id="response">
+    <div class="pages-wrapper"><div class="page initial active"><strong data-text="🧬 Iniciando... Pulso simbiótico detectado. Presença reconhecida." id="bootText"></strong></div></div>
+    <p class="footer-text"><em>Do seu jeito. <strong>Sempre</strong> único. <strong>Sempre</strong> seu.</em></p>
+    <div class="response-controls"><div class="control-buttons"></div><div class="pagination"><button data-action="prev">⟵</button><span id="pageIndicator">1 / 1</span><button data-action="next">⟶</button></div></div>
+  </div>
+
+  <div class="input-container"><input id="userInput" placeholder="Diga: 'oi, Dual'..." type="text" /><button id="sendBtn" title="Enviar">➤</button><button id="voiceBtn" title="Falar">🎙</button></div>
+  <div class="login-container" id="loginBox"><form id="loginForm"><input id="userName" placeholder="Nome do usuário" required type="text" /><input id="assistantInput" placeholder="Nome do assistente" required type="text" /><button type="submit">Ativar</button></form></div>
+
+  <iframe id="kob-bg-frame" src="about:blank"></iframe>
+  <div id="kob-frame-veil"></div>
+  <button id="kob-frame-close" title="Fechar página">✕</button>
+  <div class="symbol-bar floating" id="symbolBar"><div class="toggle-wrap"><button class="symbol-button main-toggle" id="sbToggleBtn" title="Colapsar barra">≡</button></div><button class="symbol-button" id="btn-arch" title="Arquétipo">◉</button><div class="hud-info" id="hudStatus">KOBLLUX</div></div>
+
+  <div class="chroma-ripple" id="chromaRipple"></div>
+  <div id="arch-overlay"><div class="arch-wheel" id="archWheel"><div class="arch-wheel-title">· SELECIONAR ARQUÉTIPO ·</div></div></div>
+  <div id="arch-card-overlay"></div>
+  <div id="kblx-back"></div>
+  <div id="kblx-toast"></div>
+
+  <script src="web/js/opcodes/0x00-core.js"></script>
+  <script src="web/js/opcodes/0x01-audio.js"></script>
+  <script src="web/js/opcodes/0x02-symbolbar.js"></script>
+</body>
+</html>
