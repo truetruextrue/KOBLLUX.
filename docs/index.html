@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>dual-Infodose Chat Cinematográfico · KOBLLUX SymbolBar v2</title>
+
+  <!-- Fontes -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <!-- Particles JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+  <style>
+    /* ========== CSS ROOT & TEMAS ========== */
+    :root {
+      --bg: linear-gradient(to bottom, #000, #1a1a1a);
+      --text: #d7d7d7;
+      --fast: .4s;
+      --med: .8s;
+      --slow: 1.8s;
+      --void: #02020a;
+      --abyss: #060615;
+      --deep: #0a0a20;
+      --ink: #0f0f2e;
+      --cu-0: #8B4513;
+      --cu-1: #B87333;
+      --cu-2: #CD853F;
+      --cu-3: #D4943A;
+      --cu-4: #E8A855;
+      --cu-5: #F0C060;
+      --cu-6: #C9A84C;
+      --cu-7: #FFD700;
+      --kob-voice-primary: #C9A84C;
+      --kob-voice-secondary: #8B4513;
+      --kob-voice-accent: #F0C060;
+      --arch-color: #C9A84C;
+      --arch-glow: rgba(201,168,76,0.35);
+      --arch-glow-strong: rgba(201,168,76,0.6);
+      --border: color-mix(in srgb, var(--kob-voice-primary) 35%, rgba(255,255,255,0.08));
+      --panel-bg: color-mix(in srgb, var(--kob-voice-primary) 8%, #0b0f18);
+      --kob-voice-bg-soft: color-mix(in srgb, var(--kob-voice-primary) 18%, transparent);
+      --pearl: #e8e0f0;
+      --mist: rgba(232,224,240,0.65);
+      --cyan: #00e5ff;
+      --mono: 'Share Tech Mono', monospace;
+      --display: 'Cinzel Decorative', serif;
+      --body: 'Rajdhani', sans-serif;
+      --orb-speed: 7.2s;
+      --z-bg: 0;
+      --z-content: 100;
+      --z-hud: 5000;
+      --z-overlay: 8000;
+      --z-system: 9999;
+    }
+
+    body.light { --bg: linear-gradient(to bottom,#666,#e0e0e0); --text: #444; }
+    body.medium { --bg: linear-gradient(to bottom,#555,#333); --text: #eee; }
+    body.vibe { --bg: linear-gradient(135deg,#00d8d8,#d800d8); --text: #fff; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { font-family: var(--font-family, sans-serif); width: 100%; height: 100%; overflow: hidden; }
+    body { 
+      font-family: 'Montserrat',sans-serif; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      padding: 20px; 
+      background: var(--bg); 
+      color: var(--text); 
+      transition: background var(--slow), color var(--slow); 
+      animation: fadeIn var(--slow) ease forwards; 
+    }
+
+    @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes clickPulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.012)} }
+    @keyframes orbSpin { to { transform:rotate(360deg); } }
+    @keyframes orbPulse { from { transform:scale(1); } to { transform:scale(1.18); } }
+
+    /* ========== CARD ORIGEM (VWRDI) ========== */
+    .card-origem {
+      transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+      overflow: hidden;
+      will-change: transform, padding, height;
+      background: rgba(10, 12, 25, 0.4);
+      backdrop-filter: blur(15px);
+      border-radius: 28px;
+      margin: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      width: 90%;
+      max-width: 500px;
+      padding: 20px;
+    }
+
+    .hero-top { cursor: pointer; }
+
+    .hero-slider, .input-row, .btn-row, .time-sub {
+      transition: all 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+      transform-origin: top;
+      opacity: 1;
+      max-height: 500px;
+    }
+
+    .card-origem.is-collapsed {
+      padding-bottom: 12px;
+      background: rgba(10, 12, 25, 0.6);
+    }
+
+    .card-origem.is-collapsed .hero-slider,
+    .card-origem.is-collapsed .input-row,
+    .card-origem.is-collapsed .btn-row,
+    .card-origem.is-collapsed .time-sub {
+      opacity: 0;
+      max-height: 0;
+      margin: 0;
+      padding: 0;
+      pointer-events: none;
+      transform: translateY(-10px) scale(0.98);
+    }
+
+    .hero-main {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hero-greeting {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--kob-voice-primary);
+    }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .hero-meta-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      font-size: 0.8rem;
+    }
+
+    .time-chip {
+      background: rgba(255,255,255,0.08);
+      padding: 4px 8px;
+      border-radius: 6px;
+      color: var(--kob-voice-primary);
+    }
+
+    .label-mood {
+      opacity: 0.6;
+    }
+
+    .input-row {
+      margin-top: 16px;
+    }
+
+    .input-row label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      opacity: 0.6;
+    }
+
+    .input-row input {
+      width: 100%;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: inherit;
+      font-size: 0.9rem;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(139,69,19,0.15));
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: inherit;
+      cursor: pointer;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.25), rgba(139,69,19,0.25));
+      box-shadow: 0 0 12px var(--arch-glow);
+    }
+
+    .btn .emoji {
+      font-size: 1.1rem;
+    }
+
+    /* ========== KEY MANAGER PANEL ========== */
+    .keymgr-panel {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: var(--z-overlay);
+      background: rgba(2,2,10,0.9);
+      backdrop-filter: blur(10px);
+      display: none;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .keymgr-panel.open {
+      display: flex;
+    }
+
+    .keymgr-hd {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .keymgr-hd h3 {
+      font-size: 1.2rem;
+      color: var(--kob-voice-primary);
+    }
+
+    .keymgr-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--kob-voice-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .keymgr-close:hover {
+      background: rgba(201,168,76,0.2);
+      box-shadow: 0 0 12px var(--arch-glow);
+    }
+
+    .user-info {
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      opacity: 0.8;
+      color: var(--mist);
+    }
+
+    .user-info span {
+      color: var(--kob-voice-primary);
+      font-weight: 600;
+    }
+
+    .keymgr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .cardx {
+      background: linear-gradient(135deg, rgba(15,15,46,.6), rgba(6,6,21,.8));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .cardx h4 {
+      color: var(--kob-voice-primary);
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .row input {
+      flex: 1;
+      min-width: 120px;
+      padding: 6px 8px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: inherit;
+      font-size: 0.75rem;
+    }
+
+    .row input::placeholder {
+      opacity: 0.5;
+    }
+
+    .btnx {
+      padding: 6px 12px;
+      background: rgba(201,168,76,0.2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--mist);
+      cursor: pointer;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btnx:hover {
+      background: rgba(201,168,76,0.35);
+      color: var(--kob-voice-primary);
+    }
+
+    .list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 8px;
+    }
+
+    .item {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 6px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .badge {
+      background: rgba(201,168,76,0.25);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: var(--kob-voice-primary);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: inherit;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 8px;
+      resize: vertical;
+    }
+
+    .switch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    .switch input {
+      width: 20px;
+      height: 12px;
+      cursor: pointer;
+    }
+
+    /* ========== SYMBOL BAR v2 ========== */
+    .symbol-bar {
+      position: fixed;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: var(--z-hud);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 8px;
+      gap: 0;
+      background: rgba(6,6,21,0.88);
+      backdrop-filter: blur(20px) saturate(200%);
+      border: 1px solid var(--border);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 8px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 30px var(--arch-glow);
+      border-radius: 28px;
+      user-select: none;
+      touch-action: none;
+      transition: opacity 0.6s ease, top 0.35s cubic-bezier(0.175,0.885,0.32,1.275), left 0.35s cubic-bezier(0.175,0.885,0.32,1.275), border-radius 0.25s ease, border-color 0.5s ease, box-shadow 0.6s ease;
+    }
+
+    .symbol-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 16%;
+      right: 16%;
+      height: 2px;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(90deg, transparent, var(--kob-voice-primary), transparent);
+      opacity: 0.7;
+      transition: background 0.5s ease;
+    }
+
+    .symbol-bar.idle { opacity: 0.18; }
+    .symbol-bar.idle:hover { opacity: 1; }
+    .symbol-bar.is-dragging { opacity: 0.92; transition: none; will-change: top,left; }
+
+    .symbol-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transform-origin: center center;
+      transform: scale(var(--kblx-item-scale,1));
+      opacity: var(--kblx-item-opacity,1);
+      z-index: var(--kblx-item-z,1);
+      transition: transform 0.28s ease, opacity 0.28s ease;
+      position: relative;
+    }
+
+    .symbol-button {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.04);
+      color: var(--mist);
+      font-size: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+      outline: none;
+      font-family: var(--body);
+      transition: all 0.2s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 4px rgba(0,0,0,0.4);
+    }
+
+    .symbol-button:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--kob-voice-primary);
+      color: var(--kob-voice-primary);
+      box-shadow: 0 0 14px var(--arch-glow), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .symbol-button:active {
+      transform: scale(0.86);
+    }
+
+    .symbol-button.main-toggle {
+      background: linear-gradient(160deg, rgba(26,20,10,0.95), rgba(5,5,10,0.98));
+      color: var(--kob-voice-primary);
+      border-color: var(--kob-voice-primary);
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 0 16px var(--arch-glow), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.4);
+    }
+
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+    }
+
+    .tts-orb-mini {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .orb {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+
+    .orb-core {
+      width: 80%;
+      height: 80%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 28% 28%, var(--kob-voice-accent) 0%, rgba(255,255,255,0.08) 12%, transparent 55%), radial-gradient(circle at 72% 72%, var(--kob-voice-primary) 0%, var(--kob-voice-secondary) 100%);
+      box-shadow: 0 0 18px var(--kob-voice-primary), 0 0 8px rgba(255,255,255,0.1) inset;
+      animation: orbSpin var(--orb-speed) linear infinite;
+      transition: background 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .speaking .orb-core {
+      animation: orbSpin 1.8s linear infinite, orbPulse 0.45s ease-in-out infinite alternate;
+      box-shadow: 0 0 30px var(--kob-voice-primary), 0 0 12px rgba(255,255,255,0.15) inset;
+    }
+
+    .hud-info {
+      font-size: 8px;
+      font-family: var(--mono);
+      color: var(--kob-voice-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      padding: 5px 6px;
+      margin-top: 4px;
+      border-top: 1px solid var(--border);
+      pointer-events: none;
+      opacity: 0.75;
+      white-space: nowrap;
+      transition: color 0.5s ease, border-color 0.5s ease;
+    }
+
+    /* ========== ARCH OVERLAY ========== */
+    #arch-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: var(--z-overlay);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2,2,10,0.75);
+      backdrop-filter: blur(8px);
+    }
+
+    #arch-overlay.open {
+      display: flex;
+    }
+
+    .arch-wheel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      max-width: 380px;
+      background: linear-gradient(135deg, rgba(10,10,30,0.97), rgba(5,5,18,0.99));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 0 60px var(--arch-glow), 0 30px 60px rgba(0,0,0,0.8);
+      animation: fadeIn .28s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    .arch-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: var(--mono);
+      min-width: 56px;
+    }
+
+    .arch-chip:hover {
+      transform: scale(1.1);
+      border-color: currentColor;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .a-orb {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, var(--a-color), transparent 50%), radial-gradient(circle at 70% 70%, var(--a-prim), var(--a-sec));
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .a-name {
+      font-size: 7px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .a-freq {
+      font-size: 6px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1px;
+    }
+
+    /* ========== MISC ========== */
+    #themeToggle {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--text);
+      border-radius: 50%;
+      background: transparent;
+      opacity: .3;
+      cursor: pointer;
+      transition: opacity var(--med), border-color var(--med);
+      z-index: 10;
+    }
+
+    #themeToggle:hover { opacity: 0.8; }
+
+    #themeToggle::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--text);
+      opacity: 0.2;
+    }
+
+    #particles-js {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .response-container {
+      position: fixed;
+      left: 20px;
+      right: 20px;
+      bottom: 160px;
+      padding: 12px;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+      z-index: 1;
+      transition: background var(--slow);
+      animation: fadeIn var(--slow) ease forwards;
+    }
+
+    .page {
+      display: none;
+      opacity: 0;
+      transition: opacity var(--slow);
+    }
+
+    .page.active {
+      display: block;
+      opacity: 1;
+    }
+
+    .response-block {
+      margin: 1rem 0;
+      padding: 1.3rem;
+      border-radius: 12px;
+      line-height: 1.8;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn var(--slow) ease forwards;
+      transition: box-shadow var(--fast), transform var(--fast);
+      background: linear-gradient(135deg, rgba(0,255,255,.2), rgba(0,100,100,.1));
+      border-left: 4px solid #0ff;
+    }
+
+    .response-block:hover {
+      box-shadow: 0 0 15px rgba(0,255,255,.4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particles JS -->
+  <div id="particles-js"></div>
+
+  <!-- Theme Toggle -->
+  <button aria-label="Alternar tema" id="themeToggle" title="Alternar tema"></button>
+
+  <!-- ========== CARD ORIGEM (VWRDI INTEGRADO) ========== -->
+  <section class="card-origem" id="cardOrigem">
+    <div class="hero-card hero-embedded" id="heroTouchArea">
+      <div class="hero-top">
+        <div class="hero-main">
+          <div class="hero-greeting" id="heroGreeting">Bom dia, Dual</div>
+          <div class="hero-subtitle" id="heroSubtitle">Sincronizando tua dose...</div>
+        </div>
+      </div>
+
+      <div class="hero-meta-row">
+        <span class="time-chip" id="timeNow">--:--</span>
+        <span id="moodLabel" class="label-mood">Estado Mental</span>
+      </div>
+    </div>
+
+    <div id="timeSub" class="time-sub"></div>
+
+    <div class="input-row">
+      <label for="intentInput">Intenção / vibração</label>
+      <input id="intentInput" placeholder="O que pretendes ativar?" />
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="btnDocs">
+        <span class="emoji">📂</span>
+        <span>Docs & Apps</span>
+      </button>
+      <button class="btn" id="btnAddApp">
+        <span class="emoji">＋</span>
+        <span>Novo app</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========== KEY MANAGER PANEL ========== -->
+  <div class="keymgr-panel" id="keymgrPanel">
+    <div class="keymgr-hd">
+      <h3>Chaves & Treinamentos — Dual.Infodose</h3>
+      <button class="keymgr-close" id="keymgrClose">✕</button>
+    </div>
+    <p class="user-info">Usuário: <span id="keymgrUserName"></span> — Assistente: <span id="keymgrAssistantName"></span></p>
+    <div class="keymgr-grid">
+      <div class="cardx">
+        <h4>OpenRouter — Chaves</h4>
+        <div class="row">
+          <input id="orKeyName" placeholder="Nome da chave (ex.: Pessoal, Work)" type="text">
+          <input id="orKeyValue" placeholder="Cole sua chave sk-..." type="password">
+          <button class="btnx" id="btnPasteKey">Colar</button>
+          <button class="btnx" id="btnSaveKey">Salvar</button>
+        </div>
+        <div class="list" id="keysList"></div>
+      </div>
+      <div class="cardx">
+        <h4>Treinamento Base (TXT)</h4>
+        <div class="row">
+          <input id="baseTrainName" placeholder="Nome (ex.: Unificado v6)" type="text">
+          <button class="btnx" id="btnLoadBaseTxt">Carregar TXT</button>
+          <input accept=".txt" id="baseTrainFile" style="display:none" type="file">
+          <button class="btnx" id="btnApplyBaseTxt">Aplicar</button>
+          <label class="switch"><input checked id="baseTrainEnabled" type="checkbox"> Ativo</label>
+        </div>
+        <textarea id="baseTrainText" placeholder="Conteúdo do TXT base"></textarea>
+      </div>
+      <div class="cardx">
+        <h4>Treinamentos Extras / Ativações</h4>
+        <div class="row">
+          <input id="extraName" placeholder="Nome do extra/ativação" type="text">
+          <button class="btnx" id="btnLoadExtraTxt">Adicionar TXT</button>
+          <input accept=".txt" id="extraFile" style="display:none" type="file">
+        </div>
+        <div class="list" id="extrasList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SYMBOL BAR v2 ========== -->
+  <div class="symbol-bar floating" id="symbolBar">
+    <div class="toggle-wrap">
+      <button class="symbol-button main-toggle" id="sbToggleBtn" title="Menu">≡</button>
+    </div>
+    <button class="symbol-button" id="btn-arch" title="Arquétipo (1.5s = chaves, 3s = wheel)">
+      <div class="tts-orb-mini"><div class="orb" id="main-orb"><div class="orb-core"></div></div></div>
+    </button>
+    <div class="hud-info" id="hudStatus">KOBLLUX</div>
+  </div>
+
+  <!-- ========== ARCH OVERLAY ========== -->
+  <div id="arch-overlay">
+    <div class="arch-wheel" id="archWheel"></div>
+  </div>
+
+  <script>
+    // ========== INITIALIZATION ========== 
+    document.addEventListener('DOMContentLoaded', () => {
+      // Setup Card Origem
+      const card = document.getElementById('cardOrigem');
+      const heroArea = document.getElementById('heroTouchArea');
+      const greeting = document.getElementById('heroGreeting');
+      const subtitle = document.getElementById('heroSubtitle');
+      
+      const userName = localStorage.getItem('di_userName') || 'Dual';
+      const infodoseName = localStorage.getItem('di_infodoseName') || 'Infodose';
+      
+      const runChronos = () => {
+        const hour = new Date().getHours();
+        let msg = "Bom dia";
+        if (hour >= 12 && hour < 18) msg = "Boa tarde";
+        if (hour >= 18 || hour < 5) msg = "Boa noite";
+        
+        if (greeting) greeting.textContent = `${msg}, ${userName}`;
+        if (subtitle) subtitle.textContent = `Dual.Infodose ${infodoseName} online.`;
+      };
+      runChronos();
+
+      // Colapso do Card
+      const KEY_COLLAPSE = 'di_card_collapsed';
+      const toggleCollapse = (forceState = null) => {
+        const isNow = forceState !== null ? forceState : !card.classList.contains('is-collapsed');
+        card.classList.toggle('is-collapsed', isNow);
+        localStorage.setItem(KEY_COLLAPSE, isNow ? '1' : '0');
+        if (navigator.vibrate) navigator.vibrate(8);
+      };
+
+      const savedState = localStorage.getItem(KEY_COLLAPSE);
+      if (savedState === '1') toggleCollapse(true);
+      else if (savedState === null) {
+        const h = new Date().getHours();
+        if (h >= 21 || h < 6) toggleCollapse(true);
+      }
+
+      heroArea?.addEventListener('click', () => toggleCollapse());
+
+      // Setup Particles
+      if (typeof particlesJS !== 'undefined') {
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: 40 },
+            color: { value: ['#0ff','#f0f'] },
+            shape: { type: 'circle' },
+            opacity: { value: 0.4 },
+            size: { value: 2.4 },
+            move: { enable: true, speed: 1.5 }
+          },
+          retina_detect: true
+        });
+      }
+
+      // Key Manager
+      initKeyManager();
+
+      // ORB Long Press (1.5s = Keys, 3s = Wheel)
+      setupOrbLongPress();
+    });
+
+    // ========== ORB LONG PRESS ========== 
+    function setupOrbLongPress() {
+      const btn = document.getElementById('btn-arch');
+      const DURATION_SHORT = 1500; // 1.5s para chaves
+      const DURATION_LONG = 3000;  // 3s para wheel
+      let timer1, timer2, t0;
+
+      function start() {
+        t0 = Date.now();
+
+        // Timer para 1.5s (Key Manager)
+        timer1 = setTimeout(() => {
+          openKeyManager();
+        }, DURATION_SHORT);
+
+        // Timer para 3s (Arch Wheel)
+        timer2 = setTimeout(() => {
+          openArchOverlay();
+        }, DURATION_LONG);
+      }
+
+      function cancel() {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        t0 = null;
+      }
+
+      btn.addEventListener('pointerdown', start, { passive: true });
+      btn.addEventListener('pointerup', cancel);
+      btn.addEventListener('pointerleave', cancel);
+    }
+
+    // ========== KEY MANAGER ========== 
+    function initKeyManager() {
+      if (window.__keyManagerInitialised) return;
+      window.__keyManagerInitialised = true;
+
+      const LS_KEYS = {
+        OR_KEYS: 'OR_KEYS',
+        OR_ACTIVE: 'OR_ACTIVE',
+        TRAIN_BASE: 'TRAIN_BASE_TEXT',
+        TRAIN_BASE_NAME: 'TRAIN_BASE_NAME',
+        TRAIN_BASE_ENABLED: 'TRAIN_BASE_ENABLED',
+        TRAIN_EXTRAS: 'TRAIN_EXTRAS'
+      };
+
+      const qs = (s, r=document) => r.querySelector(s);
+      const store = {
+        get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch(e) { return d; } },
+        set(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+      };
+
+      const panel = qs('#keymgrPanel');
+      const closeBtn = qs('#keymgrClose');
+      const orKeyName = qs('#orKeyName');
+      const orKeyValue = qs('#orKeyValue');
+      const btnPaste = qs('#btnPasteKey');
+      const btnSaveKey = qs('#btnSaveKey');
+      const keysList = qs('#keysList');
+      const baseName = qs('#baseTrainName');
+      const baseText = qs('#baseTrainText');
+      const baseFile = qs('#baseTrainFile');
+      const btnLoadBase = qs('#btnLoadBaseTxt');
+      const btnApply = qs('#btnApplyBaseTxt');
+      const baseEnabled = qs('#baseTrainEnabled');
+      const extraName = qs('#extraName');
+      const extraFile = qs('#extraFile');
+      const btnLoadExt = qs('#btnLoadExtraTxt');
+      const extrasList = qs('#extrasList');
+      const keymgrUserName = qs('#keymgrUserName');
+      const keymgrAssistantName = qs('#keymgrAssistantName');
+
+      closeBtn?.addEventListener('click', () => panel.classList.remove('open'));
+
+      btnPaste?.addEventListener('click', async () => {
+        try { orKeyValue.value = await navigator.clipboard.readText(); }
+        catch(e) { alert('Não consegui ler o clipboard.'); }
+      });
+
+      function renderKeys(){
+        const list = store.get(LS_KEYS.OR_KEYS, []);
+        const active = store.get(LS_KEYS.OR_ACTIVE, null);
+        keysList.innerHTML = '';
+        list.forEach((k, idx) => {
+          const item = document.createElement('div');
+          item.className = 'item';
+          item.innerHTML = '<div class="badges"><span class="badge">' + (k.name || ('Chave ' + (idx+1))) + '</span>' + (active === k.name ? '<span class="badge">ATIVA</span>' : '') + '</div>';
+          const actions = document.createElement('div');
+          actions.className = 'row';
+          const btnAct = document.createElement('button');
+          btnAct.className = 'btnx';
+          btnAct.textContent = 'Ativar';
+          btnAct.addEventListener('click', () => { store.set(LS_KEYS.OR_ACTIVE, k.name); renderKeys(); });
+          const btnDel = document.createElement('button');
+          btnDel.className = 'btnx';
+          btnDel.textContent = 'Excluir';
+          btnDel.addEventListener('click', () => { list.splice(idx,1); store.set(LS_KEYS.OR_KEYS, list); if (active === k.name) store.set(LS_KEYS.OR_ACTIVE, null); renderKeys(); });
+          actions.append(btnAct, btnDel);
+          item.append(actions);
+          keysList.append(item);
+        });
+      }
+
+      btnSaveKey?.addEventListener('click', () => {
+        const name = (orKeyName.value || '').trim();
+        const val = (orKeyValue.value || '').trim();
+        if (!val || !/^sk-/.test(val)) { return alert('Cole uma chave começando com sk-'); }
+        const list = store.get(LS_KEYS.OR_KEYS, []);
+        const i = list.findIndex(x => x.name === name);
+        if (i >= 0) list[i].key = val; else list.push({ name: name || ('Chave ' + (list.length+1)), key: val });
+        store.set(LS_KEYS.OR_KEYS, list);
+        if (!store.get(LS_KEYS.OR_ACTIVE, null)) store.set(LS_KEYS.OR_ACTIVE, list[0].name);
+        orKeyValue.value = '';
+        renderKeys();
+        alert('Chave salva.');
+      });
+
+      window.getOpenRouterKey = function() {
+        const list = store.get(LS_KEYS.OR_KEYS, []);
+        const active = store.get(LS_KEYS.OR_ACTIVE, null);
+        const item = list.find(x => x.name === active) || list[0];
+        return item ? item.key : null;
+      };
+
+      // Training base
+      function loadBaseFromLS() {
+        baseName.value = store.get(LS_KEYS.TRAIN_BASE_NAME, 'Base (inline)');
+        baseText.value = store.get(LS_KEYS.TRAIN_BASE, '') || (window.TRAININGS && window.TRAININGS.unificado) || '';
+        baseEnabled.checked = store.get(LS_KEYS.TRAIN_BASE_ENABLED, true);
+      }
+      loadBaseFromLS();
+
+      btnLoadBase?.addEventListener('click', () => baseFile.click());
+      baseFile?.addEventListener('change', async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        const txt = await f.text();
+        baseName.value = f.name.replace(/\.txt$/i, '');
+        baseText.value = txt;
+      });
+
+      btnApply?.addEventListener('click', () => {
+        store.set(LS_KEYS.TRAIN_BASE_NAME, baseName.value.trim() || 'Base');
+        store.set(LS_KEYS.TRAIN_BASE, baseText.value || '');
+        store.set(LS_KEYS.TRAIN_BASE_ENABLED, baseEnabled.checked);
+        alert('Treinamento Base atualizado.');
+      });
+
+      // Extras
+      function renderExtras() {
+        const list = store.get(LS_KEYS.TRAIN_EXTRAS, []);
+        extrasList.innerHTML = '';
+        list.forEach((ext, idx) => {
+          const item = document.createElement('div');
+          item.className = 'item';
+          item.innerHTML = '<div class="badges"><span class="badge">' + (ext.name || ('Extra ' + (idx+1))) + '</span>' + (ext.enabled ? '' : '<span class="badge">DESATIVADO</span>') + '</div>';
+          const actions = document.createElement('div');
+          actions.className = 'row';
+          const btnAct = document.createElement('button');
+          btnAct.className = 'btnx';
+          btnAct.textContent = ext.enabled ? 'Desativar' : 'Ativar';
+          btnAct.addEventListener('click', () => { ext.enabled = !ext.enabled; store.set(LS_KEYS.TRAIN_EXTRAS, list); renderExtras(); });
+          const btnDel = document.createElement('button');
+          btnDel.className = 'btnx';
+          btnDel.textContent = 'Excluir';
+          btnDel.addEventListener('click', () => { list.splice(idx,1); store.set(LS_KEYS.TRAIN_EXTRAS, list); renderExtras(); });
+          actions.append(btnAct, btnDel);
+          item.append(actions);
+          extrasList.append(item);
+        });
+      }
+
+      function addExtra(name, text) {
+        const list = store.get(LS_KEYS.TRAIN_EXTRAS, []);
+        list.push({ name: name || ('Extra ' + (list.length+1)), text, enabled: true });
+        store.set(LS_KEYS.TRAIN_EXTRAS, list);
+        renderExtras();
+      }
+
+      btnLoadExt?.addEventListener('click', () => extraFile.click());
+      extraFile?.addEventListener('change', async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        const txt = await f.text();
+        const name = (extraName.value || f.name.replace(/\.txt$/i, '')).trim();
+        if (!name) { return alert('Nome do extra é obrigatório'); }
+        addExtra(name, txt);
+        extraName.value = '';
+        extraFile.value = '';
+      });
+
+      renderKeys();
+      renderExtras();
+    }
+
+    function openKeyManager() {
+      const panel = document.getElementById('keymgrPanel');
+      if (panel) {
+        panel.classList.add('open');
+        if (document.getElementById('keymgrUserName')) document.getElementById('keymgrUserName').textContent = localStorage.getItem('userName') || '';
+        if (document.getElementById('keymgrAssistantName')) document.getElementById('keymgrAssistantName').textContent = localStorage.getItem('assistantBase') || '';
+      }
+    }
+
+    // ========== ARCHETYPES ========== 
+    const ARCHETYPES = [
+      { name:'kobllux', p:'#C9A84C', s:'#8B4513', a:'#F0C060', f:432, e:'∞', r:'VERDADE · INTEGRAR' },
+      { name:'atlas', p:'#8e9aaf', s:'#5c6478', a:'#b0bec5', f:432, e:'🗿', r:'FUNDAÇÃO · ESTRUTURA' },
+      { name:'nova', p:'#00e5ff', s:'#0099cc', a:'#80f4ff', f:528, e:'⚡', r:'ENERGIA · VELOCIDADE' },
+      { name:'vitalis', p:'#00e070', s:'#00a050', a:'#80ffb8', f:639, e:'🌿', r:'VIDA · CRESCIMENTO' },
+      { name:'pulse', p:'#ff7020', s:'#cc3800', a:'#ffaa60', f:741, e:'🔥', r:'IMPULSO · AÇÃO' },
+      { name:'kaos', p:'#ff2a6d', s:'#aa0040', a:'#ff80a0', f:852, e:'🌪', r:'CAOS · TRANSFORMAÇÃO' }
+    ];
+
+    function buildArchWheel() {
+      const wheel = document.getElementById('archWheel');
+      wheel.innerHTML = '';
+      ARCHETYPES.forEach((arch) => {
+        const chip = document.createElement('div');
+        chip.className = 'arch-chip';
+        chip.style.setProperty('--a-color', arch.a);
+        chip.style.setProperty('--a-prim', arch.p);
+        chip.style.setProperty('--a-sec', arch.s);
+        chip.innerHTML = `<div class="a-orb" style="background:radial-gradient(circle at 35% 30%, ${arch.a} 0%, transparent 50%), radial-gradient(circle at 70% 70%, ${arch.p} 0%, ${arch.s} 100%);"></div><div class="a-name">${arch.name}</div><div class="a-freq">${arch.f}Hz</div>`;
+        chip.addEventListener('click', () => {
+          applyArchetype(arch);
+          closeArchOverlay();
+        });
+        wheel.appendChild(chip);
+      });
+    }
+
+    function applyArchetype(arch) {
+      const root = document.documentElement;
+      root.style.setProperty('--kob-voice-primary', arch.p);
+      root.style.setProperty('--kob-voice-secondary', arch.s);
+      root.style.setProperty('--kob-voice-accent', arch.a);
+      root.style.setProperty('--arch-color', arch.p);
+      const hud = document.getElementById('hudStatus');
+      if (hud) hud.textContent = arch.name.toUpperCase() + ' · ' + arch.f + 'Hz';
+    }
+
+    function openArchOverlay() {
+      const overlay = document.getElementById('arch-overlay');
+      if (overlay) overlay.classList.add('open');
+    }
+
+    function closeArchOverlay() {
+      const overlay = document.getElementById('arch-overlay');
+      if (overlay) overlay.classList.remove('open');
+    }
+
+    document.getElementById('arch-overlay')?.addEventListener('click', (e) => {
+      if (e.target === document.getElementById('arch-overlay')) closeArchOverlay();
+    });
+
+    // Initialize arch wheel on load
+    window.addEventListener('load', buildArchWheel);
+  </script>
+</body>
+</html>
