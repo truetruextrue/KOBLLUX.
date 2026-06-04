@@ -1,0 +1,36 @@
+name: "KOBLLUX · Malha Viva ∆³"
+on:
+  push:
+    branches: ["claude/**", "main"]
+  pull_request:
+    types: [opened, synchronize, closed]
+jobs:
+  malha-viva:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 20, token: "${{ secrets.GITHUB_TOKEN }}"}
+      - name: "ᚱᛇ Rhea · Persistir Evento"
+        env:
+          KOB_SHA: ${{ github.sha }}
+          KOB_REPO: ${{ github.repository }}
+          KOB_BRANCH: ${{ github.ref_name }}
+          KOB_ACTOR: ${{ github.actor }}
+          KOB_RUN_ID: ${{ github.run_id }}
+          KOB_EVENT: ${{ github.event_name }}
+          KOB_MSG: ${{ github.event.head_commit.message || '' }}
+          KOB_PR_TITLE: ${{ github.event.pull_request.title || '' }}
+          KOB_PR_NUM: ${{ github.event.pull_request.number || '' }}
+        run: python3 .github/scripts/rhea_sync.py
+      - name: "Commit Memória [skip ci]"
+        run: |
+          git config user.name "KOBLLUX-∆³"
+          git config user.email "kobllux@infodose.com.br"
+          git add kobllux_memory.jsonl kobllux_seal.json 2>/dev/null || true
+          if ! git diff --staged --quiet; then
+            git commit -m "ᚱᛇ Rhea · sync · ${{ github.sha }} [skip ci]"
+            git push origin HEAD || true
+          fi
