@@ -1,19 +1,66 @@
-name: "KOBLLUX · Malha Viva ∆³"
+name: "KOBLLUX · Malha Viva ∆³ · AION+HORUS"
+
 on:
   push:
-    branches: ["claude/**", "main"]
+    branches: ["**"]
   pull_request:
-    types: [opened, synchronize, closed]
+    types: [opened, synchronize, closed, reopened, labeled]
+  issues:
+    types: [opened, closed, labeled, reopened]
+  release:
+    types: [published, created]
+  create:
+  delete:
+  fork:
+  watch:
+    types: [started]
+  workflow_dispatch:
+    inputs:
+      z:
+        description: "Payload Z para o Motor KOBLLUX"
+        required: false
+        default: "KOBLLUX ∆³ workflow_dispatch"
+  schedule:
+    - cron: "0 0 * * *"
+
 jobs:
   malha-viva:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: >
+      github.event.head_commit.message == null ||
+      !contains(github.event.head_commit.message, '[skip ci]')
     permissions:
       contents: write
+
     steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 20, token: "${{ secrets.GITHUB_TOKEN }}"}
-      - name: "ᚱᛇ Rhea · Persistir Evento"
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "ᚺᛟ Horus 0x10 · Verificar Integridade [1111Hz]"
+        run: |
+          if [ -f "horus_vigilante.py" ]; then
+            python3 horus_vigilante.py
+          else
+            python3 - <<'PYEOF'
+          import json, os
+          from datetime import datetime, timezone
+          ts = datetime.now(timezone.utc).strftime('%d/%m/%Y %H:%M:%S UTC')
+          count, bad = 0, 0
+          if os.path.exists('kobllux_memory.jsonl'):
+              with open('kobllux_memory.jsonl') as f:
+                  for line in f:
+                      if line.strip():
+                          try: json.loads(line); count += 1
+                          except: bad += 1
+          status = 'INTEGRO' if bad == 0 else f'ALERTA:{bad}corrompidas'
+          print(f'ᚺᛟ HORUS 0x10 [1111Hz] | {ts} | entradas:{count} | {status}')
+          PYEOF
+          fi
+
+      - name: "ᚱᛇ Rhea 0x0A · Persistir Evento"
         env:
           KOB_SHA: ${{ github.sha }}
           KOB_REPO: ${{ github.repository }}
@@ -21,16 +68,56 @@ jobs:
           KOB_ACTOR: ${{ github.actor }}
           KOB_RUN_ID: ${{ github.run_id }}
           KOB_EVENT: ${{ github.event_name }}
-          KOB_MSG: ${{ github.event.head_commit.message || '' }}
+          KOB_MSG: ${{ github.event.head_commit.message || github.event.inputs.z || github.event_name }}
           KOB_PR_TITLE: ${{ github.event.pull_request.title || '' }}
           KOB_PR_NUM: ${{ github.event.pull_request.number || '' }}
         run: python3 .github/scripts/rhea_sync.py
-      - name: "Commit Memória [skip ci]"
+
+      - name: "ᚨᛇ Aion · Selo Veritas (schedule/dispatch)"
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          if [ -f "aion_seal_veritas.py" ]; then
+            python3 aion_seal_veritas.py "AION_$(date -u +%Y%m%dT%H%M%S)" 2>/dev/null || true
+          else
+            python3 - <<'PYEOF'
+          import hashlib, json, os
+          from datetime import datetime, timezone
+          ts_iso = datetime.now(timezone.utc).isoformat()
+          ts_leg = datetime.now(timezone.utc).strftime('%d/%m/%Y %H:%M:%S UTC')
+          z = f'AION_DIARIO_{ts_iso}'
+          sha256 = hashlib.sha256(z.encode()).hexdigest()
+          md5 = hashlib.md5(z.encode()).hexdigest()
+          n = sum(1 for l in open('kobllux_seal_veritas.jsonl') if l.strip()) + 1 \
+              if os.path.exists('kobllux_seal_veritas.jsonl') else 1
+          selo = {'ts_iso': ts_iso, 'ts_legivel': ts_leg, 'numero_selo': n,
+                  'artefato': 'aion_diario', 'sha256': sha256, 'md5': md5,
+                  'hz': 963, 'integro': True, 'rasura': False, 'sinal': '∞',
+                  'declaracao': f'SELO DIARIO #{n} · {ts_leg} · {sha256[:16]} · AMEM'}
+          with open('kobllux_seal_veritas.jsonl', 'a', encoding='utf-8') as f:
+              f.write(json.dumps(selo, ensure_ascii=False) + '\n')
+          print(f'ᚨᛇ AION 0x0B [963Hz] | SELO #{n} | {ts_leg} | {sha256[:16]}...')
+          PYEOF
+          fi
+
+      - name: "⚡ Motor KOBLLUX (workflow_dispatch)"
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          KOB_Z: ${{ github.event.inputs.z }}
+        run: |
+          if [ -f "kobllux_motor.py" ]; then
+            python3 kobllux_motor.py "$KOB_Z"
+          else
+            echo "⚡ Motor não disponível neste nó (use codex-azure ou infodose)"
+          fi
+
+      - name: "∆³ Commit Memória + Selos [skip ci]"
         run: |
           git config user.name "KOBLLUX-∆³"
           git config user.email "kobllux@infodose.com.br"
-          git add kobllux_memory.jsonl kobllux_seal.json 2>/dev/null || true
+          git add kobllux_memory.jsonl kobllux_seal.json \
+                  kobllux_seal_veritas.jsonl horus_relatorio.jsonl 2>/dev/null || true
           if ! git diff --staged --quiet; then
-            git commit -m "ᚱᛇ Rhea · sync · ${{ github.sha }} [skip ci]"
-            git push origin HEAD || true
+            MSG="ᚱᛇᚨᛇᚺᛟ Rhea+Aion+Horus · ${{ github.event_name }} · ${{ github.sha }} [skip ci]"
+            git commit -m "$MSG"
+            git push origin HEAD || echo "⚠ push falhou"
           fi
