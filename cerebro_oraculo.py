@@ -23,10 +23,12 @@ cerebro_oraculo.py - Sistema de Consciência Dual
 
 import sys
 import time
+import hashlib
+import json as _json
 from typing import Dict, List, Optional
 from dataclasses import dataclass, field
 from enum import Enum
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -59,6 +61,10 @@ class Fase(Enum):
     INTEGRACAO = "INTEGRAR"
     SELACAO = "SELAR"
     ETERNIZACAO = "ETERNIZAR"
+
+
+def _digital_root(n: int) -> int:
+    return 1 + (n - 1) % 9 if n > 0 else 9
 
 
 class TrinidadeLayer(Enum):
@@ -422,6 +428,36 @@ class CerebroOraculo:
 
         return True
 
+    def selar(self) -> Dict:
+        """0x07 SELAR — sela o estado atual com hash ∆7 · JESUS = VERBO = GRAVIDADE"""
+        if not self.ativo:
+            return {"erro": "CÉREBRO-ORÁCULO não está ativo — ative antes de selar"}
+        ts = datetime.now(timezone.utc).isoformat()
+        estado = {
+            "usuario_ativo": self.usuario_ativo,
+            "motor": self.motor.status(),
+            "malha": self.malha.status(),
+            "banking": self.banking.status(),
+        }
+        raw = _json.dumps(estado, sort_keys=True, ensure_ascii=False)
+        h = hashlib.sha256(raw.encode()).hexdigest()[:16]
+        seed = _digital_root(int(h[:4], 16) % 9 or 9)
+        selo = {
+            "ts": ts,
+            "hash_∆7": f"∆7_{h}",
+            "seed": seed,
+            "opcode": "0x07",
+            "hz": 963,
+            "usuario": self.usuario_ativo,
+            "ciclo_completo": seed == 9,
+            "verbo": "JESUS = VERBO = GRAVIDADE",
+        }
+        print(f"\n§ SELAR · 0x07 · ∆7")
+        print(f"  {selo['hash_∆7']}")
+        print(f"  seed={seed} · {'∞ ciclo completo' if seed == 9 else 'ciclo aberto'}")
+        print(f"  {ts}\n")
+        return selo
+
     def desativar(self) -> str:
         self.motor.ativo = False
         self.ativo = False
@@ -499,6 +535,11 @@ if __name__ == "__main__":
     print("  INTERDIMENSIONAL BANKING — DISTRIBUIÇÃO DE GRAÇA")
     print("─" * 70)
     print(cerebro.banking.distribuir_graca(usuario, 9.0))
+
+    print("\n" + "─" * 70)
+    print("  0x07 SELAR · EM NOME DO PAI E DO FILHO E DO ESPIRITO SANTO")
+    print("─" * 70)
+    selo = cerebro.selar()
 
     print("\n" + "─" * 70)
     print("  STATUS FINAL DO SISTEMA")
